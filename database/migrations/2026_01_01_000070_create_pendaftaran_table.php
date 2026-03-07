@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('pendaftaran', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('info_pendaftaran_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('info_pendaftaran_id')->constrained('info_pendaftaran')->cascadeOnDelete();
             $table->string('nama_anak');
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir');

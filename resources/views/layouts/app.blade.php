@@ -31,110 +31,177 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
 
-<!-- Top Navigation Bar -->
-<header class="sticky top-0 z-50 w-full bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<!-- Top Accent Bar -->
+<div class="w-full h-1 bg-gradient-to-r from-primary via-accent to-primary sticky top-0 z-50"></div>
+
+<!-- Main Navigation -->
+<header class="sticky top-1 z-40 w-full bg-white/95 dark:bg-background-dark/95 backdrop-blur-lg shadow-sm border-b border-slate-100 dark:border-slate-800/60">
+    @php
+        $navLinks = [
+            ['route' => 'home',       'label' => 'Beranda',     'match' => 'home'],
+            ['route' => 'profil',     'label' => 'Profil',      'match' => 'profil'],
+            ['route' => 'guru',       'label' => 'Guru',        'match' => 'guru'],
+            ['route' => 'berita',     'label' => 'Berita',      'match' => 'berita*'],
+            ['route' => 'galeri',     'label' => 'Galeri',      'match' => 'galeri'],
+            ['route' => 'pendaftaran','label' => 'Pendaftaran', 'match' => 'pendaftaran*'],
+        ];
+    @endphp
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20">
-            <div class="flex items-center gap-3">
+        <div class="flex items-center justify-between" style="height:68px">
+
+            {{-- Logo --}}
+            <a href="{{ route('home') }}" class="flex items-center gap-3 group shrink-0">
                 @if(!empty($settings['logo']))
-                    <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo" class="h-10 w-10 object-contain rounded-lg"/>
+                    <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo"
+                         class="h-10 w-10 object-contain rounded-xl ring-2 ring-slate-100 group-hover:ring-accent/40 transition-all"/>
                 @else
-                    <div class="bg-primary p-2 rounded-lg text-white">
-                        <span class="material-symbols-outlined text-2xl">school</span>
+                    <div class="h-10 w-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-md shadow-primary/20 group-hover:shadow-primary/40 transition-all shrink-0">
+                        <span class="material-symbols-outlined text-white text-xl" style="font-variation-settings:'FILL' 1">school</span>
                     </div>
                 @endif
-                <a href="{{ route('home') }}" class="text-xl font-bold tracking-tight text-primary dark:text-slate-100">
-                    {{ $profil->nama_sekolah ?? 'SD Negeri Warialau' }}
-                </a>
-            </div>
+                <div class="hidden sm:flex flex-col leading-tight">
+                    <span class="text-[15px] font-black tracking-tight text-primary dark:text-white">
+                        {{ $profil->nama_sekolah ?? 'SD Negeri Warialau' }}
+                    </span>
+                    <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
+                        Kab. Kepulauan Aru · Maluku
+                    </span>
+                </div>
+            </a>
 
-            <nav class="hidden md:flex items-center gap-8">
-                <a class="text-sm font-semibold hover:text-primary transition-colors {{ request()->routeIs('home') ? 'text-primary' : 'text-slate-600 dark:text-slate-400' }}"
-                   href="{{ route('home') }}">Beranda</a>
-                <a class="text-sm font-medium hover:text-primary transition-colors {{ request()->routeIs('profil') ? 'text-primary' : 'text-slate-600 dark:text-slate-400' }}"
-                   href="{{ route('profil') }}">Profil</a>
-                <a class="text-sm font-medium hover:text-primary transition-colors {{ request()->routeIs('guru') ? 'text-primary' : 'text-slate-600 dark:text-slate-400' }}"
-                   href="{{ route('guru') }}">Guru</a>
-                <a class="text-sm font-medium hover:text-primary transition-colors {{ request()->routeIs('berita*') ? 'text-primary' : 'text-slate-600 dark:text-slate-400' }}"
-                   href="{{ route('berita') }}">Berita</a>
-                <a class="text-sm font-medium hover:text-primary transition-colors {{ request()->routeIs('galeri') ? 'text-primary' : 'text-slate-600 dark:text-slate-400' }}"
-                   href="{{ route('galeri') }}">Galeri</a>
-                <a class="text-sm font-medium hover:text-primary transition-colors {{ request()->routeIs('pendaftaran*') ? 'text-primary' : 'text-slate-600 dark:text-slate-400' }}"
-                   href="{{ route('pendaftaran') }}">Pendaftaran</a>
+            {{-- Desktop Nav Links --}}
+            <nav class="hidden lg:flex items-center gap-0.5">
+                @foreach($navLinks as $link)
+                    @php $active = request()->routeIs($link['match']); @endphp
+                    <a href="{{ route($link['route']) }}"
+                       class="relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150
+                              {{ $active
+                                  ? 'text-primary dark:text-white'
+                                  : 'text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5' }}">
+                        {{ $link['label'] }}
+                        @if($active)
+                            <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-accent rounded-full"></span>
+                        @endif
+                    </a>
+                @endforeach
             </nav>
 
-            <div class="flex items-center gap-3">
+            {{-- Desktop Auth --}}
+            <div class="hidden lg:flex items-center gap-2">
                 @auth
                     @if(auth()->user()->role === 'admin')
                         <a href="/admin"
-                           class="text-sm font-semibold text-primary hover:text-primary/80 transition-colors hidden md:block">
-                            Panel Admin
+                           class="flex items-center gap-1.5 text-xs font-bold text-primary/80 hover:text-primary border border-primary/20 hover:border-primary/50 px-3 py-2 rounded-lg transition-all">
+                            <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+                            Admin
                         </a>
-                    @else
-                        <span class="hidden md:flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                            <span class="material-symbols-outlined text-base text-primary">account_circle</span>
-                            {{ auth()->user()->name }}
-                        </span>
                     @endif
-                    <form action="{{ route('logout') }}" method="POST" class="hidden md:block">
-                        @csrf
-                        <button type="submit"
-                                class="bg-slate-100 dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-700 dark:text-slate-300 hover:text-red-600 px-4 py-2 rounded-lg font-semibold text-sm transition-all">
-                            Keluar
+                    <div class="relative" id="user-dropdown-wrapper">
+                        <button id="user-dropdown-btn"
+                                class="flex items-center gap-2 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 px-3 py-2 rounded-xl transition-all">
+                            <span class="w-7 h-7 rounded-lg bg-primary text-white text-xs font-black flex items-center justify-center shrink-0">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                            </span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200 max-w-[110px] truncate">{{ auth()->user()->name }}</span>
+                            <span class="material-symbols-outlined text-sm text-slate-400 transition-transform duration-200" id="dropdown-chevron">expand_more</span>
                         </button>
-                    </form>
+                        <div id="user-dropdown-menu"
+                             class="hidden absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-white/10 overflow-hidden z-50">
+                            <div class="px-4 py-3.5 bg-gradient-to-br from-primary to-primary/80 text-white">
+                                <p class="text-xs font-semibold opacity-70 mb-0.5">Masuk sebagai</p>
+                                <p class="text-sm font-bold truncate">{{ auth()->user()->name }}</p>
+                                <p class="text-xs opacity-60 truncate">{{ auth()->user()->email }}</p>
+                            </div>
+                            <div class="p-2">
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                            class="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
+                                        <span class="material-symbols-outlined text-base">logout</span>
+                                        Keluar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 @else
                     <a href="{{ route('login') }}"
-                       class="hidden md:block text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
+                       class="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors px-3 py-2">
                         Masuk
                     </a>
                     <a href="{{ route('register') }}"
-                       class="hidden md:block bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20">
+                       class="flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-primary/25 active:scale-95">
+                        <span class="material-symbols-outlined text-sm">person_add</span>
                         Daftar
                     </a>
                 @endauth
-                <!-- Mobile menu button -->
-                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:text-primary">
-                    <span class="material-symbols-outlined">menu</span>
-                </button>
             </div>
-        </div>
 
-        <!-- Mobile nav -->
-        <div id="mobile-menu" class="hidden md:hidden pb-4">
-            <nav class="flex flex-col gap-2">
-                <a class="py-2 px-3 text-sm font-semibold rounded-lg hover:bg-primary/10 hover:text-primary transition-colors {{ request()->routeIs('home') ? 'text-primary bg-primary/10' : 'text-slate-600' }}"
-                   href="{{ route('home') }}">Beranda</a>
-                <a class="py-2 px-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-colors {{ request()->routeIs('profil') ? 'text-primary bg-primary/10' : 'text-slate-600' }}"
-                   href="{{ route('profil') }}">Profil</a>
-                <a class="py-2 px-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-colors {{ request()->routeIs('guru') ? 'text-primary bg-primary/10' : 'text-slate-600' }}"
-                   href="{{ route('guru') }}">Guru</a>
-                <a class="py-2 px-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-colors {{ request()->routeIs('berita*') ? 'text-primary bg-primary/10' : 'text-slate-600' }}"
-                   href="{{ route('berita') }}">Berita</a>
-                <a class="py-2 px-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-colors {{ request()->routeIs('galeri') ? 'text-primary bg-primary/10' : 'text-slate-600' }}"
-                   href="{{ route('galeri') }}">Galeri</a>
-                <a class="py-2 px-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-colors {{ request()->routeIs('pendaftaran*') ? 'text-primary bg-primary/10' : 'text-slate-600' }}"
-                   href="{{ route('pendaftaran') }}">Pendaftaran</a>
-                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 mt-2">
-                    @auth
-                        <p class="px-3 py-1 text-xs text-slate-400">
-                            Login sebagai: <strong>{{ auth()->user()->name }}</strong>
-                        </p>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit"
-                                    class="w-full text-left py-2 px-3 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 transition-colors">
-                                Keluar
-                            </button>
-                        </form>
-                    @else
-                        <a class="py-2 px-3 text-sm font-medium rounded-lg hover:bg-primary/10 hover:text-primary transition-colors text-slate-600 block"
-                           href="{{ route('login') }}">Masuk</a>
-                        <a class="py-2 px-3 text-sm font-bold rounded-lg bg-primary text-white block text-center mt-1"
-                           href="{{ route('register') }}">Daftar Akun</a>
-                    @endauth
+            {{-- Mobile Hamburger --}}
+            <button id="mobile-menu-btn"
+                    class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+                <span class="material-symbols-outlined" id="mobile-menu-icon">menu</span>
+            </button>
+        </div>
+    </div>
+
+    {{-- Mobile Drawer --}}
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-100 dark:border-white/5">
+        <div class="max-w-7xl mx-auto px-4 py-3 space-y-0.5">
+            @foreach($navLinks as $link)
+                @php $active = request()->routeIs($link['match']); @endphp
+                <a href="{{ route($link['route']) }}"
+                   class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all
+                          {{ $active
+                              ? 'bg-primary text-white shadow-md shadow-primary/20'
+                              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-white' }}">
+                    {{ $link['label'] }}
+                    @if($active)
+                        <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                    @endif
+                </a>
+            @endforeach
+        </div>
+        <div class="px-4 pb-4 pt-2 border-t border-slate-100 dark:border-white/5 mx-4 mt-1">
+            @auth
+                <div class="flex items-center gap-3 py-3 mb-2">
+                    <span class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white font-black shrink-0">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    </span>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-800 dark:text-white truncate">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-slate-400 truncate">{{ auth()->user()->email }}</p>
+                    </div>
                 </div>
-            </nav>
+                @if(auth()->user()->role === 'admin')
+                    <a href="/admin"
+                       class="flex items-center gap-2 w-full px-4 py-2.5 mb-2 rounded-xl text-sm font-semibold text-primary bg-primary/8 hover:bg-primary/15 transition-colors">
+                        <span class="material-symbols-outlined text-base">admin_panel_settings</span>
+                        Panel Admin
+                    </a>
+                @endif
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                            class="flex items-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 transition-colors">
+                        <span class="material-symbols-outlined text-base">logout</span>
+                        Keluar
+                    </button>
+                </form>
+            @else
+                <div class="flex flex-col gap-2 mt-2">
+                    <a href="{{ route('login') }}"
+                       class="flex items-center justify-center w-full px-4 py-3 rounded-xl text-sm font-bold text-primary border-2 border-primary/30 hover:border-primary hover:bg-primary/5 transition-all">
+                        Masuk
+                    </a>
+                    <a href="{{ route('register') }}"
+                       class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-bold bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all">
+                        <span class="material-symbols-outlined text-base">person_add</span>
+                        Daftar Akun
+                    </a>
+                </div>
+            @endauth
         </div>
     </div>
 </header>
@@ -249,12 +316,43 @@
 </footer>
 
 <script>
+(function () {
     // Mobile menu toggle
-    const btn = document.getElementById('mobile-menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    if (btn && menu) {
-        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    const mobileBtn  = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileIcon = document.getElementById('mobile-menu-icon');
+
+    if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+            const open = !mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden', open);
+            if (mobileIcon) mobileIcon.textContent = open ? 'menu' : 'close';
+        });
     }
+
+    // User dropdown
+    const dropBtn     = document.getElementById('user-dropdown-btn');
+    const dropMenu    = document.getElementById('user-dropdown-menu');
+    const dropChevron = document.getElementById('dropdown-chevron');
+
+    if (dropBtn && dropMenu) {
+        dropBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const open = !dropMenu.classList.contains('hidden');
+            dropMenu.classList.toggle('hidden', open);
+            if (dropChevron) dropChevron.style.transform = open ? '' : 'rotate(180deg)';
+        });
+
+        document.addEventListener('click', () => {
+            dropMenu.classList.add('hidden');
+            if (dropChevron) dropChevron.style.transform = '';
+        });
+    }
+
+    // Auto-hide flash message after 4s
+    const flash = document.getElementById('flash-success');
+    if (flash) setTimeout(() => flash.remove(), 4000);
+})();
 </script>
 @stack('scripts')
 </body>
