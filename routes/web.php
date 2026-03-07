@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\GuruController;
@@ -42,6 +43,15 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
+    // Lupa Password (OTP)
+    Route::get('/forgot-password',         [ForgotPasswordController::class, 'showForm'])->name('password.request');
+    Route::post('/forgot-password',        [ForgotPasswordController::class, 'sendOtp'])->name('password.email');
+    Route::get('/verify-otp',              [ForgotPasswordController::class, 'showVerify'])->name('password.verify.form');
+    Route::post('/verify-otp',             [ForgotPasswordController::class, 'verifyOtp'])->name('password.verify');
+    Route::post('/resend-otp',             [ForgotPasswordController::class, 'resendOtp'])->name('password.resend');
+    Route::get('/reset-password',          [ForgotPasswordController::class, 'showReset'])->name('password.reset.form');
+    Route::post('/reset-password',         [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 });
 
 Route::middleware('auth')->group(function () {

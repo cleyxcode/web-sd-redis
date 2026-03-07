@@ -105,6 +105,7 @@
                 <div class="flex flex-col gap-2">
                     <div class="flex justify-between items-center">
                         <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Kata Sandi</label>
+                        <a href="{{ route('password.request') }}" class="text-xs text-accent hover:underline font-medium">Lupa kata sandi?</a>
                     </div>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">lock</span>
