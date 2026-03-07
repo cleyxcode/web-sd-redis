@@ -98,4 +98,23 @@ class PendaftaranPublikController extends Controller
     {
         return view('pages.pendaftaran.sukses');
     }
+
+    public function riwayat()
+    {
+        $pendaftaran = Pendaftaran::where('user_id', auth()->id())
+            ->with('infoPendaftaran')
+            ->latest()
+            ->get();
+
+        return view('pages.pendaftaran.riwayat', compact('pendaftaran'));
+    }
+
+    public function detail($id)
+    {
+        $item = Pendaftaran::where('user_id', auth()->id())
+            ->with('infoPendaftaran')
+            ->findOrFail($id);
+
+        return view('pages.pendaftaran.detail', compact('item'));
+    }
 }

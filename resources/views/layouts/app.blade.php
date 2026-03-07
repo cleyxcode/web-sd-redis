@@ -114,6 +114,19 @@
                                 <p class="text-xs opacity-60 truncate">{{ auth()->user()->email }}</p>
                             </div>
                             <div class="p-2">
+                                <a href="{{ route('profil-akun') }}"
+                                   class="flex items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-colors">
+                                    <span class="material-symbols-outlined text-base text-primary">manage_accounts</span>
+                                    Profil Akun
+                                </a>
+                                @if(auth()->user()->role === 'orangtua')
+                                <a href="{{ route('pendaftaran.riwayat') }}"
+                                   class="flex items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-colors">
+                                    <span class="material-symbols-outlined text-base text-primary">assignment</span>
+                                    Riwayat Pendaftaran
+                                </a>
+                                @endif
+                                <div class="my-1.5 border-t border-slate-100 dark:border-white/10"></div>
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button type="submit"

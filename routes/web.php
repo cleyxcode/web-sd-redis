@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\ProfilAkunController;
 use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\HomeController;
@@ -56,4 +57,13 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Riwayat Pendaftaran
+    Route::get('/pendaftaran/riwayat', [PendaftaranPublikController::class, 'riwayat'])->name('pendaftaran.riwayat');
+    Route::get('/pendaftaran/riwayat/{id}', [PendaftaranPublikController::class, 'detail'])->name('pendaftaran.detail');
+
+    // Profil Akun
+    Route::get('/profil-akun', [ProfilAkunController::class, 'index'])->name('profil-akun');
+    Route::patch('/profil-akun/info', [ProfilAkunController::class, 'updateInfo'])->name('profil-akun.update-info');
+    Route::patch('/profil-akun/password', [ProfilAkunController::class, 'updatePassword'])->name('profil-akun.update-password');
 });
