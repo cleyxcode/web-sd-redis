@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BeritaController;
 use App\Http\Controllers\Api\GaleriController;
 use App\Http\Controllers\Api\GuruController;
+use App\Http\Controllers\Api\NotifikasiController;
 use App\Http\Controllers\Api\PendaftaranController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ProfilSekolahController;
@@ -52,5 +53,11 @@ Route::prefix('v1')->group(function () {
         Route::post('pendaftaran',          [PendaftaranController::class, 'store']);
         Route::get ('pendaftaran/riwayat',  [PendaftaranController::class, 'riwayat']);
         Route::get ('pendaftaran/{id}',     [PendaftaranController::class, 'show']);
+
+        // Notifikasi
+        Route::get  ('notifikasi',              [NotifikasiController::class, 'index']);
+        Route::get  ('notifikasi/unread-count', [NotifikasiController::class, 'unreadCount']);
+        Route::patch('notifikasi/baca-semua',   [NotifikasiController::class, 'bacaSemua']);
+        Route::patch('notifikasi/{id}/baca',    [NotifikasiController::class, 'baca']);
     });
 });
