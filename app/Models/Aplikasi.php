@@ -12,7 +12,7 @@ class Aplikasi extends Model
         'nama_aplikasi',
         'versi',
         'deskripsi',
-        'file_apk',
+        'link_download',
         'ukuran_file',
         'status',
     ];

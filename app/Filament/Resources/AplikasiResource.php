@@ -63,16 +63,15 @@ class AplikasiResource extends Resource
                     ])
                     ->columns(3),
 
-                Forms\Components\Section::make('File APK')
+                Forms\Components\Section::make('Link Download APK')
                     ->schema([
-                        Forms\Components\FileUpload::make('file_apk')
-                            ->label('Upload File APK')
+                        Forms\Components\TextInput::make('link_download')
+                            ->label('Link Download APK')
                             ->required()
-                            ->disk('public')
-                            ->directory('aplikasi')
-                            ->acceptedFileTypes(['application/vnd.android.package-archive', 'application/octet-stream'])
-                            ->maxSize(102400) // 100 MB
-                            ->helperText('Upload file .apk, maksimal 100 MB.')
+                            ->url()
+                            ->prefix('https://')
+                            ->placeholder('https://drive.google.com/file/d/xxx/view?usp=sharing')
+                            ->helperText('Paste link Google Drive, Dropbox, atau link download langsung file .apk.')
                             ->columnSpanFull(),
                     ]),
             ]);
@@ -94,6 +93,14 @@ class AplikasiResource extends Resource
 
                 Tables\Columns\TextColumn::make('ukuran_file')
                     ->label('Ukuran'),
+
+                Tables\Columns\IconColumn::make('link_download')
+                    ->label('Link')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
 
                 Tables\Columns\BadgeColumn::make('status')
                     ->label('Status')

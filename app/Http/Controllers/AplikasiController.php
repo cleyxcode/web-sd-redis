@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aplikasi;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AplikasiController extends Controller
 {
@@ -21,16 +19,12 @@ class AplikasiController extends Controller
         return view('pages.download-aplikasi', compact('aplikasiAktif', 'riwayat'));
     }
 
-    public function download($id): BinaryFileResponse
+    public function download($id)
     {
         $aplikasi = Aplikasi::findOrFail($id);
 
-        $path = Storage::disk('public')->path($aplikasi->file_apk);
+        abort_if(empty($aplikasi->link_download), 404, 'Link download tidak tersedia.');
 
-        abort_unless(file_exists($path), 404, 'File tidak ditemukan.');
-
-        $filename = 'SDN-Warialau-v' . $aplikasi->versi . '.apk';
-
-        return response()->download($path, $filename);
+        return redirect()->away($aplikasi->link_download);
     }
 }
