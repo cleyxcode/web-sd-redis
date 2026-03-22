@@ -31,7 +31,7 @@
                     <span class="material-symbols-outlined text-6xl">school</span>
                 @endif
             </div>
-            <h1 class="text-5xl font-black tracking-tight mb-2">{{ $profil->nama_sekolah ?? 'SD Negeri Warialau' }}</h1>
+            <h1 class="font-display text-5xl font-black tracking-tight mb-2">{{ $profil->nama_sekolah ?? 'SD Negeri Warialau' }}</h1>
             <p class="text-xl font-medium text-slate-200">Sistem Informasi Sekolah</p>
             <div class="w-10 h-1 bg-accent my-8 rounded-full"></div>
             <p class="text-2xl italic font-light leading-relaxed mb-12">
@@ -57,7 +57,7 @@
 
             {{-- Header --}}
             <div class="mb-8">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Masuk ke Akun Anda</h2>
+                <h2 class="font-display text-3xl font-black text-slate-900 dark:text-slate-100 mb-2">Masuk ke Akun Anda</h2>
                 <p class="text-slate-500 dark:text-slate-400">Silakan masuk untuk melanjutkan pendaftaran</p>
             </div>
 

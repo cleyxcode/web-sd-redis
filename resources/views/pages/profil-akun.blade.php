@@ -3,17 +3,21 @@
 @section('title', 'Profil Akun - ' . ($profil->nama_sekolah ?? 'SD Negeri Warialau'))
 
 @section('content')
-<div class="min-h-screen bg-slate-50 dark:bg-background-dark py-10 px-4">
+<div class="min-h-screen bg-cream dark:bg-background-dark py-10 px-4">
     <div class="max-w-3xl mx-auto">
 
         {{-- Header --}}
         <div class="mb-8">
-            <h1 class="text-2xl font-black text-slate-900 dark:text-white">Profil Akun</h1>
+            <span class="section-eyebrow mb-3 inline-flex">
+                <span class="material-symbols-outlined text-sm">manage_accounts</span>
+                Akun Saya
+            </span>
+            <h1 class="font-display text-3xl font-black text-slate-900 dark:text-white">Profil <span class="text-gradient">Akun</span></h1>
             <p class="text-slate-400 text-sm mt-1">Kelola informasi pribadi dan keamanan akun Anda.</p>
         </div>
 
         {{-- Tab nav --}}
-        <div class="flex gap-1 bg-white dark:bg-slate-800 rounded-2xl p-1.5 border border-slate-100 dark:border-slate-700 mb-6 shadow-sm" id="tab-nav">
+        <div class="flex gap-1 bg-white dark:bg-slate-800 rounded-2xl p-1.5 border border-sand dark:border-slate-700 mb-6 shadow-sm" id="tab-nav">
             <button onclick="switchTab('info')"
                     class="tab-btn flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all"
                     id="tab-btn-info">
@@ -49,11 +53,12 @@
                 </div>
             @endif
 
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-sand dark:border-slate-800 shadow-sm overflow-hidden">
 
                 {{-- Avatar header --}}
-                <div class="bg-gradient-to-r from-primary to-primary/80 p-8 flex items-center gap-5">
-                    <div class="w-20 h-20 rounded-full bg-accent flex items-center justify-center text-primary text-3xl font-black shrink-0 shadow-lg">
+                <div class="bg-gradient-to-br from-primary via-primary to-secondary p-8 flex items-center gap-5 relative overflow-hidden">
+                    <div class="absolute -right-12 -top-12 w-36 h-36 bg-white/5 rounded-full pointer-events-none"></div>
+                    <div class="w-20 h-20 rounded-2xl bg-accent/20 border-2 border-accent/30 flex items-center justify-center font-display text-accent text-3xl font-black shrink-0 shadow-lg">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                     <div>

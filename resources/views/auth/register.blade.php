@@ -30,7 +30,7 @@
                     <span class="material-symbols-outlined text-2xl text-white">school</span>
                 @endif
             </div>
-            <h1 class="text-2xl font-bold tracking-tight">{{ $profil->nama_sekolah ?? 'SD Negeri Warialau' }}</h1>
+            <h1 class="font-display text-2xl font-black tracking-tight">{{ $profil->nama_sekolah ?? 'SD Negeri Warialau' }}</h1>
         </div>
 
         {{-- Quote --}}
@@ -58,7 +58,7 @@
 
             {{-- Header --}}
             <div class="space-y-1">
-                <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Buat Akun Baru</h2>
+                <h2 class="font-display text-3xl font-black text-slate-900 dark:text-white">Buat Akun Baru</h2>
                 <p class="text-slate-500 dark:text-slate-400">Daftarkan akun untuk memulai pendaftaran siswa baru</p>
             </div>
 

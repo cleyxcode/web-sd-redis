@@ -1,367 +1,438 @@
 @extends('layouts.app')
 
-@section('title', 'Pendaftaran Siswa Baru - ' . ($profil->nama_sekolah ?? 'SD Negeri Warialau'))
+@section('title', 'Pendaftaran Siswa Baru — ' . ($profil->nama_sekolah ?? 'SD Negeri Warialau'))
+
+@push('styles')
+<style>
+/* ── Form input styling ── */
+.form-input {
+    width: 100%;
+    padding: .625rem .875rem;
+    background: #FAF8F4;
+    border: 1.5px solid #E8E2D8;
+    border-radius: .75rem;
+    font-size: .875rem;
+    font-family: "Nunito", sans-serif;
+    color: #1e293b;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    outline: none;
+}
+.form-input:focus {
+    border-color: #0B7B8B;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(11,123,139,.1);
+}
+.form-input.error { border-color: #ef4444; }
+select.form-input { cursor: pointer; }
+textarea.form-input { resize: vertical; min-height: 80px; }
+
+/* ── Section card header ── */
+.section-header {
+    background: linear-gradient(135deg, #0D2340 0%, #0B7B8B 100%);
+    padding: 1rem 1.5rem;
+    display: flex; align-items: center; gap: .75rem;
+}
+
+/* ── Step indicator ── */
+.step-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 900;
+    transition: all .3s ease;
+}
+</style>
+@endpush
 
 @section('content')
 
-{{-- Hero Section --}}
-<section class="bg-white dark:bg-slate-900 py-12 border-b border-slate-200 dark:border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center gap-2 mb-4 text-sm font-medium text-slate-500 dark:text-slate-400">
-            <a class="hover:text-primary transition-colors" href="{{ route('home') }}">Beranda</a>
+{{-- Hero --}}
+<section class="bg-white dark:bg-slate-950 border-b border-sand dark:border-slate-800 py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex items-center gap-2 mb-4 text-xs font-bold text-slate-400">
+            <a href="{{ route('home') }}" class="hover:text-secondary transition-colors">Beranda</a>
             <span class="material-symbols-outlined text-xs">chevron_right</span>
-            <span class="text-primary dark:text-slate-200">Pendaftaran</span>
+            <span class="text-primary dark:text-accent">Pendaftaran</span>
         </div>
-        <h1 class="text-4xl font-black text-primary dark:text-slate-100 mb-2">
-            Pendaftaran Siswa Baru
+        <span class="section-eyebrow mb-3 inline-flex">
+            <span class="material-symbols-outlined text-sm">how_to_reg</span>
+            PPDB Online
+        </span>
+        <h1 class="font-display text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-3 reveal">
+            Pendaftaran <span class="text-gradient">Siswa Baru</span>
         </h1>
-        <p class="text-slate-600 dark:text-slate-400 text-lg max-w-2xl">
-            {{ $profil->nama_sekolah ?? 'SD Negeri Warialau' }} membuka pendaftaran siswa baru. Isi formulir di bawah ini dengan lengkap dan benar.
+        <p class="text-slate-500 dark:text-slate-400 text-base max-w-xl reveal" style="transition-delay:.1s">
+            {{ $profil->nama_sekolah ?? 'SD Negeri Warialau' }} membuka pendaftaran siswa baru. Isi formulir dengan lengkap dan benar.
         </p>
     </div>
 </section>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
 
     @if(!$infoPendaftaran)
-        {{-- Pendaftaran Tutup --}}
-        <div class="max-w-2xl mx-auto text-center py-20">
-            <div class="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span class="material-symbols-outlined text-5xl text-slate-400">event_busy</span>
-            </div>
-            <h2 class="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-4">
-                Pendaftaran Belum Dibuka
-            </h2>
-            <p class="text-slate-500 dark:text-slate-400 mb-8">
-                Saat ini pendaftaran siswa baru belum dibuka. Pantau terus informasi terbaru dari kami.
-            </p>
-            <a href="{{ route('berita') }}"
-               class="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary/90 transition-colors">
-                <span class="material-symbols-outlined">newspaper</span>
-                Lihat Berita & Pengumuman
-            </a>
+    {{-- Pendaftaran Tutup --}}
+    <div class="max-w-xl mx-auto text-center py-20 reveal">
+        <div class="w-24 h-24 bg-primary/8 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <span class="material-symbols-outlined text-5xl text-primary/40">event_busy</span>
         </div>
+        <h2 class="font-display text-2xl font-black text-slate-700 dark:text-slate-300 mb-3">
+            Pendaftaran Belum Dibuka
+        </h2>
+        <p class="text-slate-400 text-sm leading-relaxed mb-8">
+            Saat ini pendaftaran siswa baru belum dibuka. Pantau terus informasi terbaru dari kami melalui berita dan pengumuman.
+        </p>
+        <a href="{{ route('berita') }}"
+           class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-8 py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/25 transition-all hover:scale-105">
+            <span class="material-symbols-outlined text-base">newspaper</span>
+            Lihat Berita & Pengumuman
+        </a>
+    </div>
+
     @else
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-            {{-- Info Pendaftaran (Sidebar) --}}
-            <aside class="lg:col-span-1 order-2 lg:order-1">
-                <div class="sticky top-24 space-y-5">
+        {{-- Sidebar Info --}}
+        <aside class="lg:col-span-1 order-2 lg:order-1">
+            <div class="sticky top-24 space-y-5">
 
-                    {{-- Status Badge --}}
-                    <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-5">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
-                            <span class="text-green-700 dark:text-green-400 font-bold text-sm uppercase tracking-wider">
-                                Pendaftaran Dibuka
-                            </span>
-                        </div>
-                        <p class="text-2xl font-black text-green-800 dark:text-green-300">
-                            Tahun Ajaran {{ $infoPendaftaran->tahun_ajaran }}
-                        </p>
+                {{-- Status Badge --}}
+                <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/50 rounded-2xl p-5 relative overflow-hidden">
+                    <div class="absolute -right-8 -top-8 w-24 h-24 bg-emerald-400/10 rounded-full"></div>
+                    <div class="flex items-center gap-2.5 mb-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-emerald-700 dark:text-emerald-400 font-black text-xs uppercase tracking-wider">
+                            Pendaftaran Dibuka
+                        </span>
                     </div>
-
-                    {{-- Detail Info --}}
-                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 space-y-4">
-                        <h3 class="font-bold text-slate-900 dark:text-white text-lg">Informasi Pendaftaran</h3>
-
-                        <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl mt-0.5">calendar_today</span>
-                            <div>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Tanggal Buka</p>
-                                <p class="font-semibold text-slate-800 dark:text-slate-200">
-                                    {{ \Carbon\Carbon::parse($infoPendaftaran->tanggal_buka)->translatedFormat('d F Y') }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-red-500 text-xl mt-0.5">event_busy</span>
-                            <div>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Tanggal Tutup</p>
-                                <p class="font-semibold text-slate-800 dark:text-slate-200">
-                                    {{ \Carbon\Carbon::parse($infoPendaftaran->tanggal_tutup)->translatedFormat('d F Y') }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl mt-0.5">group_add</span>
-                            <div>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Kuota Tersedia</p>
-                                <p class="font-semibold text-slate-800 dark:text-slate-200">
-                                    {{ $infoPendaftaran->kuota }} Siswa
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Syarat --}}
-                    @if($infoPendaftaran->syarat)
-                        <div class="bg-accent/10 border border-accent/30 rounded-2xl p-5">
-                            <h3 class="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                                <span class="material-symbols-outlined text-accent">checklist</span>
-                                Persyaratan
-                            </h3>
-                            <div class="text-sm text-slate-700 dark:text-slate-300 space-y-1 leading-relaxed">
-                                @foreach(array_filter(array_map('trim', explode("\n", $infoPendaftaran->syarat))) as $syarat)
-                                    <div class="flex gap-2">
-                                        <span class="text-accent font-bold shrink-0">•</span>
-                                        <span>{{ $syarat }}</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
+                    <p class="font-display text-2xl font-black text-emerald-800 dark:text-emerald-300">
+                        TA {{ $infoPendaftaran->tahun_ajaran }}
+                    </p>
                 </div>
-            </aside>
 
-            {{-- Form Pendaftaran --}}
-            <div class="lg:col-span-2 order-1 lg:order-2">
-
-                {{-- Errors --}}
-                @if($errors->any())
-                    <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
-                        <div class="flex items-center gap-2 text-red-700 dark:text-red-400 font-bold mb-2">
-                            <span class="material-symbols-outlined">error</span>
-                            Harap perbaiki kesalahan berikut:
+                {{-- Detail Info --}}
+                <div class="bg-white dark:bg-slate-900 border border-sand dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm">
+                    <h3 class="font-display font-black text-slate-900 dark:text-white text-base flex items-center gap-2">
+                        <span class="w-5 h-0.5 bg-accent rounded-full"></span>
+                        Info Pendaftaran
+                    </h3>
+                    <div class="flex items-start gap-3">
+                        <div class="w-9 h-9 bg-secondary/10 rounded-xl flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-secondary text-base" style="font-variation-settings:'FILL' 1">calendar_today</span>
                         </div>
-                        <ul class="list-disc list-inside text-sm text-red-600 dark:text-red-400 space-y-1">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                        <div>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Tanggal Buka</p>
+                            <p class="font-bold text-slate-800 dark:text-slate-200 text-sm">
+                                {{ \Carbon\Carbon::parse($infoPendaftaran->tanggal_buka)->translatedFormat('d F Y') }}
+                            </p>
+                        </div>
                     </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-9 h-9 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-red-500 text-base" style="font-variation-settings:'FILL' 1">event_busy</span>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Tanggal Tutup</p>
+                            <p class="font-bold text-slate-800 dark:text-slate-200 text-sm">
+                                {{ \Carbon\Carbon::parse($infoPendaftaran->tanggal_tutup)->translatedFormat('d F Y') }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-9 h-9 bg-primary/8 rounded-xl flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-primary text-base" style="font-variation-settings:'FILL' 1">group_add</span>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Kuota Tersedia</p>
+                            <p class="font-black text-slate-800 dark:text-slate-200 text-lg font-display">{{ $infoPendaftaran->kuota }} <span class="text-sm font-semibold text-slate-400">siswa</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Persyaratan --}}
+                @if($infoPendaftaran->syarat)
+                <div class="bg-accent/8 border border-accent/25 rounded-2xl p-5">
+                    <h3 class="font-display font-black text-slate-900 dark:text-white text-sm mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-accent text-base" style="font-variation-settings:'FILL' 1">checklist</span>
+                        Persyaratan
+                    </h3>
+                    <ul class="space-y-2">
+                        @foreach(array_filter(array_map('trim', explode("\n", $infoPendaftaran->syarat))) as $syarat)
+                        <li class="flex gap-2.5 items-start">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0"></span>
+                            <span class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{{ $syarat }}</span>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
                 @endif
 
-                <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data"
-                      class="space-y-8">
-                    @csrf
-
-                    {{-- Section: Data Anak --}}
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-                        <div class="bg-primary px-6 py-4 flex items-center gap-3">
-                            <span class="material-symbols-outlined text-white">child_care</span>
-                            <h2 class="text-white font-bold text-lg">Data Anak</h2>
-                        </div>
-                        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
-
-                            <div class="sm:col-span-2">
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Nama Lengkap Anak <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" name="nama_anak" value="{{ old('nama_anak') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Nama lengkap sesuai akta lahir"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Tempat Lahir
-                                </label>
-                                <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Kota/Kabupaten"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Tanggal Lahir <span class="text-red-500">*</span>
-                                </label>
-                                <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Jenis Kelamin <span class="text-red-500">*</span>
-                                </label>
-                                <select name="jenis_kelamin"
-                                        class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm">
-                                    <option value="">-- Pilih --</option>
-                                    <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                    <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Agama <span class="text-red-500">*</span>
-                                </label>
-                                <select name="agama"
-                                        class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm">
-                                    <option value="">-- Pilih --</option>
-                                    @foreach(['Islam','Kristen','Katolik','Hindu','Buddha','Konghucu'] as $agama)
-                                        <option value="{{ $agama }}" {{ old('agama') == $agama ? 'selected' : '' }}>{{ $agama }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Anak Ke-
-                                </label>
-                                <input type="number" name="anak_ke" value="{{ old('anak_ke') }}" min="1"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Contoh: 1"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Asal Sekolah / TK
-                                </label>
-                                <input type="text" name="asal_sekolah" value="{{ old('asal_sekolah') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Nama TK/PAUD sebelumnya"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    NIK Anak
-                                </label>
-                                <input type="text" name="nik" value="{{ old('nik') }}" maxlength="16"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="16 digit NIK"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Nomor KK
-                                </label>
-                                <input type="text" name="no_kk" value="{{ old('no_kk') }}" maxlength="16"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="16 digit Nomor KK"/>
-                            </div>
-
-                        </div>
+                {{-- Riwayat link --}}
+                @auth
+                <a href="{{ route('pendaftaran.riwayat') }}"
+                   class="flex items-center justify-between bg-primary/8 hover:bg-primary/12 dark:bg-primary/20 dark:hover:bg-primary/30 border border-primary/15 rounded-2xl p-4 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary text-base">assignment</span>
+                        <span class="text-sm font-bold text-primary dark:text-accent">Riwayat Pendaftaran</span>
                     </div>
+                    <span class="material-symbols-outlined text-primary/50 group-hover:translate-x-1 transition-transform text-sm">arrow_forward</span>
+                </a>
+                @endauth
 
-                    {{-- Section: Alamat --}}
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-                        <div class="bg-primary px-6 py-4 flex items-center gap-3">
-                            <span class="material-symbols-outlined text-white">location_on</span>
-                            <h2 class="text-white font-bold text-lg">Alamat Tempat Tinggal</h2>
-                        </div>
-                        <div class="p-6">
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                Alamat Lengkap <span class="text-red-500">*</span>
-                            </label>
-                            <textarea name="alamat" rows="3"
-                                      class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                      placeholder="Jalan, RT/RW, Desa/Kelurahan, Kecamatan, Kabupaten/Kota">{{ old('alamat') }}</textarea>
-                        </div>
-                    </div>
-
-                    {{-- Section: Data Orang Tua --}}
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-                        <div class="bg-primary px-6 py-4 flex items-center gap-3">
-                            <span class="material-symbols-outlined text-white">family_restroom</span>
-                            <h2 class="text-white font-bold text-lg">Data Orang Tua / Wali</h2>
-                        </div>
-                        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Nama Ayah
-                                </label>
-                                <input type="text" name="nama_ayah" value="{{ old('nama_ayah') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Nama lengkap ayah"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Pekerjaan Ayah
-                                </label>
-                                <input type="text" name="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Contoh: Petani, Nelayan, PNS"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Nama Ibu
-                                </label>
-                                <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Nama lengkap ibu"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Pekerjaan Ibu
-                                </label>
-                                <input type="text" name="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Contoh: Ibu Rumah Tangga, Pedagang"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    Nama Wali (jika ada)
-                                </label>
-                                <input type="text" name="nama_wali" value="{{ old('nama_wali') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Nama wali jika berbeda dengan orang tua"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                    No. HP Aktif <span class="text-red-500">*</span>
-                                </label>
-                                <input type="tel" name="no_hp" value="{{ old('no_hp') }}"
-                                       class="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                       placeholder="Contoh: 08123456789"/>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    {{-- Section: Dokumen --}}
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-                        <div class="bg-primary px-6 py-4 flex items-center gap-3">
-                            <span class="material-symbols-outlined text-white">upload_file</span>
-                            <h2 class="text-white font-bold text-lg">Upload Dokumen</h2>
-                        </div>
-                        <div class="p-6">
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                Dokumen Pendukung
-                                <span class="text-slate-400 font-normal">(Opsional — PDF/JPG/PNG, maks. 2MB)</span>
-                            </label>
-                            <div class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl p-6 text-center hover:border-primary transition-colors">
-                                <span class="material-symbols-outlined text-4xl text-slate-400 mb-2 block">upload_file</span>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mb-3">
-                                    Unggah Akta Kelahiran, KK, atau dokumen lain yang diminta
-                                </p>
-                                <input type="file" name="dokumen" accept=".pdf,.jpg,.jpeg,.png"
-                                       class="text-sm text-slate-600 dark:text-slate-400
-                                              file:mr-4 file:py-2 file:px-4 file:rounded-lg
-                                              file:border-0 file:text-sm file:font-bold
-                                              file:bg-primary file:text-white
-                                              hover:file:bg-primary/90 file:cursor-pointer"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Submit --}}
-                    <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
-                        <button type="submit"
-                                class="w-full sm:w-auto bg-accent hover:bg-accent/90 text-primary px-10 py-4 rounded-xl font-black text-lg transition-all shadow-lg shadow-accent/20 hover:scale-105 flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined">send</span>
-                            Kirim Pendaftaran
-                        </button>
-                        <p class="text-xs text-slate-400 text-center sm:text-left">
-                            Dengan mengirim formulir ini, Anda menyetujui data yang diisi adalah benar dan dapat dipertanggungjawabkan.
-                        </p>
-                    </div>
-
-                </form>
             </div>
+        </aside>
 
+        {{-- Form --}}
+        <div class="lg:col-span-2 order-1 lg:order-2">
+
+            {{-- Error messages --}}
+            @if($errors->any())
+            <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-2xl p-5">
+                <div class="flex items-center gap-2.5 text-red-700 dark:text-red-400 font-bold mb-3 text-sm">
+                    <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">error</span>
+                    Harap perbaiki kesalahan berikut:
+                </div>
+                <ul class="space-y-1">
+                    @foreach($errors->all() as $error)
+                        <li class="text-xs text-red-600 dark:text-red-400 flex items-start gap-1.5">
+                            <span class="material-symbols-outlined text-xs mt-0.5">chevron_right</span>
+                            {{ $error }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+
+                {{-- ── Data Anak ── --}}
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-sand dark:border-slate-800 overflow-hidden shadow-sm reveal">
+                    <div class="section-header">
+                        <div class="w-9 h-9 bg-white/15 rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings:'FILL' 1">child_care</span>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-white font-black text-base">Data Anak</h2>
+                            <p class="text-white/55 text-xs">Isi data lengkap calon siswa</p>
+                        </div>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                                Nama Lengkap Anak <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="nama_anak" value="{{ old('nama_anak') }}"
+                                   class="form-input {{ $errors->has('nama_anak') ? 'error' : '' }} dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Nama lengkap sesuai akta lahir"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Tempat Lahir</label>
+                            <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Kota/Kabupaten"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                                Tanggal Lahir <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}"
+                                   class="form-input {{ $errors->has('tanggal_lahir') ? 'error' : '' }} dark:bg-slate-800 dark:border-slate-700 dark:text-white"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                                Jenis Kelamin <span class="text-red-500">*</span>
+                            </label>
+                            <select name="jenis_kelamin"
+                                    class="form-input {{ $errors->has('jenis_kelamin') ? 'error' : '' }} dark:bg-slate-800 dark:border-slate-700 dark:text-white">
+                                <option value="">— Pilih —</option>
+                                <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                                Agama <span class="text-red-500">*</span>
+                            </label>
+                            <select name="agama"
+                                    class="form-input {{ $errors->has('agama') ? 'error' : '' }} dark:bg-slate-800 dark:border-slate-700 dark:text-white">
+                                <option value="">— Pilih —</option>
+                                @foreach(['Islam','Kristen','Katolik','Hindu','Buddha','Konghucu'] as $agama)
+                                    <option value="{{ $agama }}" {{ old('agama') == $agama ? 'selected' : '' }}>{{ $agama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Anak Ke-</label>
+                            <input type="number" name="anak_ke" value="{{ old('anak_ke') }}" min="1"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Contoh: 1"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Asal TK / PAUD</label>
+                            <input type="text" name="asal_sekolah" value="{{ old('asal_sekolah') }}"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Nama TK/PAUD sebelumnya"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">NIK Anak</label>
+                            <input type="text" name="nik" value="{{ old('nik') }}" maxlength="16"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="16 digit NIK"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Nomor KK</label>
+                            <input type="text" name="no_kk" value="{{ old('no_kk') }}" maxlength="16"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="16 digit Nomor KK"/>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ── Alamat ── --}}
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-sand dark:border-slate-800 overflow-hidden shadow-sm reveal" style="transition-delay:.06s">
+                    <div class="section-header">
+                        <div class="w-9 h-9 bg-white/15 rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings:'FILL' 1">location_on</span>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-white font-black text-base">Alamat Tempat Tinggal</h2>
+                            <p class="text-white/55 text-xs">Alamat domisili saat ini</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                            Alamat Lengkap <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="alamat" rows="3"
+                                  class="form-input {{ $errors->has('alamat') ? 'error' : '' }} dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                  placeholder="Jalan, RT/RW, Desa/Kelurahan, Kecamatan, Kabupaten/Kota">{{ old('alamat') }}</textarea>
+                    </div>
+                </div>
+
+                {{-- ── Data Orang Tua ── --}}
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-sand dark:border-slate-800 overflow-hidden shadow-sm reveal" style="transition-delay:.1s">
+                    <div class="section-header">
+                        <div class="w-9 h-9 bg-white/15 rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings:'FILL' 1">family_restroom</span>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-white font-black text-base">Data Orang Tua / Wali</h2>
+                            <p class="text-white/55 text-xs">Informasi kontak dan keluarga</p>
+                        </div>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Nama Ayah</label>
+                            <input type="text" name="nama_ayah" value="{{ old('nama_ayah') }}"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Nama lengkap ayah"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Pekerjaan Ayah</label>
+                            <input type="text" name="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Petani, Nelayan, PNS..."/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Nama Ibu</label>
+                            <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Nama lengkap ibu"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Pekerjaan Ibu</label>
+                            <input type="text" name="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Ibu Rumah Tangga, Pedagang..."/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Nama Wali (jika ada)</label>
+                            <input type="text" name="nama_wali" value="{{ old('nama_wali') }}"
+                                   class="form-input dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="Nama wali jika berbeda"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                                No. HP Aktif <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" name="no_hp" value="{{ old('no_hp') }}"
+                                   class="form-input {{ $errors->has('no_hp') ? 'error' : '' }} dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                   placeholder="0812 3456 7890"/>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ── Upload Dokumen ── --}}
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-sand dark:border-slate-800 overflow-hidden shadow-sm reveal" style="transition-delay:.14s">
+                    <div class="section-header">
+                        <div class="w-9 h-9 bg-white/15 rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings:'FILL' 1">upload_file</span>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-white font-black text-base">Upload Dokumen</h2>
+                            <p class="text-white/55 text-xs">Opsional — PDF/JPG/PNG, maks. 2MB</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <label id="drop-zone"
+                               class="block border-2 border-dashed border-sand dark:border-slate-700 rounded-xl p-8 text-center cursor-pointer hover:border-secondary/50 hover:bg-secondary/3 transition-all group">
+                            <span class="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600 block mb-3 group-hover:text-secondary transition-colors">cloud_upload</span>
+                            <p class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">Klik atau seret file ke sini</p>
+                            <p class="text-xs text-slate-400">Akta Kelahiran, KK, atau dokumen lain yang diminta</p>
+                            <input type="file" name="dokumen" accept=".pdf,.jpg,.jpeg,.png" class="hidden"
+                                   onchange="updateFileName(this)"/>
+                        </label>
+                        <p id="file-name" class="text-xs text-secondary font-bold mt-2 hidden"></p>
+                    </div>
+                </div>
+
+                {{-- Submit --}}
+                <div class="flex flex-col sm:flex-row items-center gap-4 pt-2 reveal" style="transition-delay:.18s">
+                    <button type="submit"
+                            class="w-full sm:w-auto bg-accent hover:bg-accent/90 text-primary px-10 py-4 rounded-xl font-black text-base transition-all shadow-lg shadow-accent/20 hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-xl">send</span>
+                        Kirim Pendaftaran
+                    </button>
+                    <p class="text-xs text-slate-400 text-center sm:text-left max-w-xs leading-relaxed">
+                        Dengan mengirim formulir ini, Anda menyatakan data yang diisi adalah benar dan dapat dipertanggungjawabkan.
+                    </p>
+                </div>
+
+            </form>
         </div>
+    </div>
     @endif
 
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+function updateFileName(input) {
+    const el = document.getElementById('file-name');
+    if (input.files.length > 0) {
+        el.textContent = '📎 ' + input.files[0].name;
+        el.classList.remove('hidden');
+    }
+}
+// Click drop zone label
+document.getElementById('drop-zone')?.addEventListener('click', function() {
+    this.querySelector('input[type=file]').click();
+});
+</script>
+@endpush
