@@ -64,7 +64,7 @@ class AdminPanelProvider extends PanelProvider
 
             // ── Favicon dari settings (jika ada) ──
             ->favicon(function () {
-                $logo = \App\Models\Settings::where('key', 'favicon')->value('value');
+                $logo = \App\Models\Setting::where('key', 'favicon')->value('value');
                 return $logo ? asset('storage/' . $logo) : null;
             })
 

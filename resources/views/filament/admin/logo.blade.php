@@ -1,6 +1,6 @@
 @php
     $profil = \App\Models\ProfilSekolah::first();
-    $settings = \App\Models\Settings::pluck('value', 'key')->toArray();
+    $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
 @endphp
 
 <div class="flex items-center gap-2.5">
