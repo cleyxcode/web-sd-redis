@@ -17,12 +17,12 @@ class AplikasiResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-device-phone-mobile';
 
     protected static ?string $navigationLabel = 'Aplikasi Android';
+    protected static ?string $navigationGroup = 'Konten Website';
+    protected static ?int $navigationSort = 4;
 
     protected static ?string $pluralLabel = 'Aplikasi Android';
 
     protected static ?string $modelLabel = 'Aplikasi';
-
-    protected static ?int $navigationSort = 10;
 
     public static function form(Form $form): Form
     {

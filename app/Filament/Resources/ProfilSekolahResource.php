@@ -17,6 +17,8 @@ class ProfilSekolahResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?string $navigationLabel = 'Profil Sekolah';
+    protected static ?string $navigationGroup = 'Data Sekolah';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

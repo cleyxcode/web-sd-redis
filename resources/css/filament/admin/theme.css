@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+@import '../../../../vendor/filament/filament/resources/css/base.css';
+
+@config 'tailwind.config.js';
+
+/* ═══════════════════════════════════════════════
+   SD Negeri Warialau — Custom Filament Theme
+   Maritime Academy Design System
+════════════════════════════════════════════════ */
+
+/* ── Sidebar navigation: custom active state ── */
+.fi-sidebar-nav-item-label {
+    font-weight: 600;
+}
+
+/* ── Sidebar: sedikit lebih compact ── */
+.fi-sidebar-item {
+    margin-bottom: 2px;
+}
+
+/* ── Topbar: border bawah lebih tegas ── */
+.fi-topbar {
+    border-bottom-width: 1px;
+}
+
+/* ── Dashboard widgets: rounded lebih smooth ── */
+.fi-wi-stats-overview-stat {
+    border-radius: 1rem;
+}
+
+/* ── Form section: rounded card ── */
+.fi-section {
+    border-radius: 1rem;
+}
+
+/* ── Table: row hover lebih halus ── */
+.fi-ta-row:hover td {
+    background-color: var(--color-primary-50) / 40%;
+}
+
+/* ── Scrollbar custom ── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-primary-300));
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--color-primary-400));
+}
+
+/* ── Modal backdrop blur ── */
+.fi-modal-window {
+    border-radius: 1.25rem;
+}
+
+/* ── Badge: sedikit lebih besar ── */
+.fi-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+}
