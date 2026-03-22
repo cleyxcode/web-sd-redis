@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\InfoPendaftaran;
 use App\Models\Pendaftaran;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class PendaftaranPublikController extends Controller
 {
     public function index()
     {
         $infoPendaftaran = InfoPendaftaran::where('status', 'aktif')->first();
+        $isGuest = !auth()->check();
 
-        return view('pages.pendaftaran.index', compact('infoPendaftaran'));
+        return view('pages.pendaftaran.index', compact('infoPendaftaran', 'isGuest'));
     }
 
     public function store(Request $request)
@@ -48,18 +47,6 @@ class PendaftaranPublikController extends Controller
             'no_hp.required'         => 'Nomor HP wajib diisi.',
         ]);
 
-        // Buat atau temukan user orangtua berdasarkan no_hp
-        $namaOrangtua = $request->nama_ayah ?: $request->nama_ibu ?: $request->nama_wali ?: 'Orang Tua';
-        $user = User::firstOrCreate(
-            ['no_hp' => $request->no_hp],
-            [
-                'name'     => $namaOrangtua,
-                'email'    => $request->no_hp . '@pendaftaran.local',
-                'password' => Hash::make($request->no_hp),
-                'role'     => 'orangtua',
-            ]
-        );
-
         // Upload dokumen
         $dokumenPath = null;
         if ($request->hasFile('dokumen')) {
@@ -67,7 +54,7 @@ class PendaftaranPublikController extends Controller
         }
 
         Pendaftaran::create([
-            'user_id'              => $user->id,
+            'user_id'              => auth()->id(),
             'info_pendaftaran_id'  => $infoPendaftaran->id,
             'nama_anak'            => $validated['nama_anak'],
             'tempat_lahir'         => $validated['tempat_lahir'],

@@ -35,9 +35,10 @@ Route::get('/guru', [GuruController::class, 'index'])->name('guru');
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
 Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.show');
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
+// Pendaftaran — GET publik (modal muncul jika tamu), POST + sukses wajib login
 Route::get('/pendaftaran', [PendaftaranPublikController::class, 'index'])->name('pendaftaran');
-Route::post('/pendaftaran', [PendaftaranPublikController::class, 'store'])->name('pendaftaran.store');
 Route::get('/pendaftaran/sukses', [PendaftaranPublikController::class, 'sukses'])->name('pendaftaran.sukses');
+Route::post('/pendaftaran', [PendaftaranPublikController::class, 'store'])->middleware('auth')->name('pendaftaran.store');
 
 // Download Aplikasi
 Route::get('/download-aplikasi', [AplikasiController::class, 'index'])->name('aplikasi');

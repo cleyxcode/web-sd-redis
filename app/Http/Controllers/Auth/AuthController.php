@@ -46,8 +46,13 @@ class AuthController extends Controller
         return redirect()->route('home')->with('success', 'Akun berhasil dibuat! Selamat datang, ' . $user->name . '.');
     }
 
-    public function showLogin()
+    public function showLogin(Request $request)
     {
+        // Simpan intended URL dari query param ?redirect=
+        if ($request->filled('redirect')) {
+            session(['url.intended' => $request->query('redirect')]);
+        }
+
         return view('auth.login');
     }
 
@@ -67,12 +72,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            // Cegah orangtua akses /admin
-            if (Auth::user()->role !== 'admin') {
-                return redirect()->intended(route('home'));
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('home');
             }
 
-            return redirect()->route('home');
+            // Orangtua: redirect ke URL yang dituju (misal: halaman pendaftaran)
+            return redirect()->intended(route('home'));
         }
 
         return back()

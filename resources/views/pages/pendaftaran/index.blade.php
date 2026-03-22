@@ -40,10 +40,87 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     font-size: .75rem; font-weight: 900;
     transition: all .3s ease;
 }
+
+/* ── Login Required Modal ── */
+#login-modal-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(13,35,64,.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity .35s cubic-bezier(.22,1,.36,1);
+}
+#login-modal-overlay.show { opacity: 1; }
+#login-modal-card {
+    transform: translateY(32px) scale(.95);
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .35s ease;
+    opacity: 0;
+}
+#login-modal-overlay.show #login-modal-card {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
 </style>
 @endpush
 
 @section('content')
+
+{{-- ══ MODAL: Login Diperlukan (tampil otomatis jika tamu) ══ --}}
+@if($isGuest)
+<div id="login-modal-overlay">
+    <div id="login-modal-card" class="w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden">
+
+        {{-- Header gelap dengan icon --}}
+        <div class="relative bg-gradient-to-br from-primary to-secondary px-8 py-8 text-white text-center overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full pointer-events-none"></div>
+            <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-accent/10 rounded-full pointer-events-none"></div>
+
+            {{-- Icon kunci --}}
+            <div class="relative z-10 w-16 h-16 bg-white/10 border-2 border-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                <span class="material-symbols-outlined text-3xl text-accent" style="font-variation-settings:'FILL' 1">lock</span>
+            </div>
+            <h2 class="font-display text-2xl font-black relative z-10">Login Diperlukan</h2>
+            <p class="text-white/65 text-sm mt-1 relative z-10">untuk mendaftar siswa baru</p>
+        </div>
+
+        {{-- Body --}}
+        <div class="px-8 py-7">
+            <p class="text-slate-500 dark:text-slate-400 text-sm text-center leading-relaxed mb-6">
+                Anda harus <strong class="text-primary dark:text-accent font-bold">login</strong> terlebih dahulu sebelum mengisi formulir pendaftaran siswa baru.
+            </p>
+
+            {{-- Tombol Login --}}
+            <a href="{{ route('login') }}?redirect={{ urlencode(route('pendaftaran')) }}"
+               class="flex items-center justify-center gap-2 w-full bg-primary hover:bg-primary/90 active:scale-95 text-white font-black py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-primary/25 mb-3">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">login</span>
+                Masuk ke Akun Saya
+            </a>
+
+            {{-- Tombol Daftar --}}
+            <a href="{{ route('register') }}"
+               class="flex items-center justify-center gap-2 w-full border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 text-primary dark:text-accent font-bold py-3.5 rounded-xl text-sm transition-all">
+                <span class="material-symbols-outlined text-base">person_add</span>
+                Buat Akun Baru
+            </a>
+
+            {{-- Separator --}}
+            <div class="flex items-center gap-3 my-5">
+                <div class="flex-1 h-px bg-sand dark:bg-slate-700"></div>
+                <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">atau</span>
+                <div class="flex-1 h-px bg-sand dark:bg-slate-700"></div>
+            </div>
+
+            <a href="{{ route('home') }}"
+               class="flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-sm font-semibold transition-colors">
+                <span class="material-symbols-outlined text-base">arrow_back</span>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </div>
+</div>
+@endif
 
 {{-- Hero --}}
 <section class="bg-white dark:bg-slate-950 border-b border-sand dark:border-slate-800 py-14">
@@ -434,5 +511,29 @@ function updateFileName(input) {
 document.getElementById('drop-zone')?.addEventListener('click', function() {
     this.querySelector('input[type=file]').click();
 });
+
+// ── Login Required Modal ──
+@if($isGuest)
+(function () {
+    const overlay = document.getElementById('login-modal-overlay');
+    if (!overlay) return;
+
+    // Blur konten halaman di belakang modal
+    const mainEl = document.querySelector('main');
+    if (mainEl) {
+        mainEl.style.filter = 'blur(4px)';
+        mainEl.style.pointerEvents = 'none';
+        mainEl.style.userSelect = 'none';
+    }
+
+    // Tampilkan modal dengan animasi setelah 120ms
+    requestAnimationFrame(() => {
+        setTimeout(() => overlay.classList.add('show'), 120);
+    });
+
+    // Cegah scroll halaman
+    document.body.style.overflow = 'hidden';
+})();
+@endif
 </script>
 @endpush
