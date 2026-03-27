@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Guru extends Model
+class Guru extends Model implements HasMedia
 {
-    use SoftDeletes;
+    use SoftDeletes, InteractsWithMedia;
 
     protected $table = 'guru';
 
@@ -20,4 +23,19 @@ class Guru extends Model
         'foto',
         'status',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('foto')
+            ->singleFile();
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumbnail')
+            ->width(150)->height(150)->nonQueued();
+
+        $this->addMediaConversion('preview')
+            ->width(400)->height(400)->nonQueued();
+    }
 }

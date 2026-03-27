@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Services\AlertBoxService;
+use Cmsmaxinc\FilamentErrorPages\FilamentErrorPagesPlugin;
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -11,12 +14,16 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
+use Hardikkhorasiya09\ChangePassword\ChangePasswordPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -68,7 +75,7 @@ class AdminPanelProvider extends PanelProvider
                 return $logo ? asset('storage/' . $logo) : null;
             })
 
-            // ── Custom theme CSS (hasil compile Tailwind v3) ──
+            // ── Custom theme CSS ──
             ->theme(asset('css/filament/admin/theme.css'))
 
             // ── Navigation grouping ──
@@ -79,6 +86,19 @@ class AdminPanelProvider extends PanelProvider
                 'Pengaturan',
             ])
 
+            ->plugins([
+                AuthUIEnhancerPlugin::make()
+                    ->formPanelPosition('right')
+                    ->formPanelWidth('40%')
+                    ->showEmptyPanelOnMobile(false)
+                    ->emptyPanelBackgroundColor(\Filament\Support\Colors\Color::Amber, '600')
+                    ->emptyPanelBackgroundImageUrl('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Kepulauan_Aru.jpg/1280px-Kepulauan_Aru.jpg')
+                    ->emptyPanelBackgroundImageOpacity('40%'),
+                ChangePasswordPlugin::make(),
+                FilamentErrorPagesPlugin::make()
+                    ->routes(['admin/*'])
+                    ->onlyShowForConfiguredRoutes(),
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -88,6 +108,19 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
             ])
+            ->renderHook(
+                PanelsRenderHook::PAGE_START,
+                fn (): string => $this->renderAlertIfExists(
+                    AlertBoxService::pendingPendaftaran()
+                ),
+            )
+            ->renderHook(
+                PanelsRenderHook::PAGE_HEADER_WIDGETS_AFTER,
+                fn (): string => $this->renderAlertIfExists(
+                    AlertBoxService::pendaftaranAktif()
+                    ?? AlertBoxService::pendaftaranTutup()
+                ),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -102,5 +135,14 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    private function renderAlertIfExists(?array $alert): string
+    {
+        if ($alert === null) return '';
+
+        return Blade::render(
+            view('filament.components.alert-box', $alert)->render()
+        );
     }
 }

@@ -7,12 +7,23 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ahmed-abdelrhman/filament-media-gallery": "^2.0",
+        "andreia/filament-nord-theme": "^1.0",
+        "cmsmaxinc/filament-error-pages": "^1.0",
+        "diogogpinto/filament-auth-ui-enhancer": "^1.0",
         "filament/filament": "^3.3",
+        "filament/spatie-laravel-media-library-plugin": "^3.3",
+        "guava/filament-icon-select-column": "^1.1",
+        "hardikkhorasiya09/change-password": "^1.0",
+        "jacobtims/inline-date-time-picker": "^1.0",
         "laravel/framework": "^12.0",
         "laravel/mcp": "^0.6.0",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.10.1",
-        "predis/predis": "^3.4"
+        "predis/predis": "^3.4",
+        "pxlrbt/filament-excel": "^2.5",
+        "spatie/laravel-medialibrary": "^11.21",
+        "traineratwot/filament-openstreetmap": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

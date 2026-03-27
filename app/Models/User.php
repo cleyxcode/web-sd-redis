@@ -40,6 +40,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->role === 'admin';
     }
 
+    public function canAccessChangePassword(): bool
+    {
+        return $this->role === 'admin';
+    }
+
     public function berita()
     {
         return $this->hasMany(Berita::class);

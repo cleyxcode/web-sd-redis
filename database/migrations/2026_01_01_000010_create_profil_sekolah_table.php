@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('alamat')->nullable();
             $table->string('kontak')->nullable();
             $table->string('logo')->nullable();
+            $table->string('koordinat')->nullable();
             $table->timestamps();
         });
     }

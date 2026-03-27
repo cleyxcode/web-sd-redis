@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama_aplikasi');
             $table->string('versi');
             $table->text('deskripsi')->nullable();
-            $table->string('file_apk');
+            $table->string('link_download');
             $table->string('ukuran_file')->nullable();
             $table->string('status')->default('aktif'); // aktif / nonaktif
             $table->timestamps();

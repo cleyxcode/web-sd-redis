@@ -1,47 +1,42 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@tailwind variants;
-@import '../../../../vendor/filament/filament/resources/css/base.css';
+@import '/vendor/filament/filament/resources/css/theme.css';
 
-@config 'tailwind.config.js';
+@source '../../../../vendor/cmsmaxinc/filament-error-pages/resources/**/*.blade.php';
+@source '../../../../vendor/guava/filament-icon-select-column/resources/**/*';
+@source '../../../../vendor/diogogpinto/filament-auth-ui-enhancer/resources/**/*.blade.php';
 
 /* ═══════════════════════════════════════════════
    SD Negeri Warialau — Custom Filament Theme
-   Maritime Academy Design System
 ════════════════════════════════════════════════ */
 
-/* ── Sidebar navigation: custom active state ── */
 .fi-sidebar-nav-item-label {
     font-weight: 600;
 }
 
-/* ── Sidebar: sedikit lebih compact ── */
 .fi-sidebar-item {
     margin-bottom: 2px;
 }
 
-/* ── Topbar: border bawah lebih tegas ── */
 .fi-topbar {
     border-bottom-width: 1px;
 }
 
-/* ── Dashboard widgets: rounded lebih smooth ── */
 .fi-wi-stats-overview-stat {
     border-radius: 1rem;
 }
 
-/* ── Form section: rounded card ── */
 .fi-section {
     border-radius: 1rem;
 }
 
-/* ── Table: row hover lebih halus ── */
-.fi-ta-row:hover td {
-    background-color: var(--color-primary-50) / 40%;
+.fi-modal-window {
+    border-radius: 1.25rem;
 }
 
-/* ── Scrollbar custom ── */
+.fi-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -55,15 +50,4 @@
 }
 ::-webkit-scrollbar-thumb:hover {
     background: rgb(var(--color-primary-400));
-}
-
-/* ── Modal backdrop blur ── */
-.fi-modal-window {
-    border-radius: 1.25rem;
-}
-
-/* ── Badge: sedikit lebih besar ── */
-.fi-badge {
-    font-size: 0.7rem;
-    font-weight: 700;
 }

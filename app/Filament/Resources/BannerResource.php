@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\StatusAktif;
 use App\Filament\Resources\BannerResource\Pages;
 use App\Models\Banner;
 use Filament\Forms;
@@ -9,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Guava\FilamentIconSelectColumn\Tables\Columns\IconSelectColumn;
 
 class BannerResource extends Resource
 {
@@ -54,12 +56,11 @@ class BannerResource extends Resource
                 Tables\Columns\TextColumn::make('urutan')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'success' => 'aktif',
-                        'danger' => 'nonaktif',
-                    ]),
+                IconSelectColumn::make('status')
+                    ->options(StatusAktif::class)
+                    ->closeOnSelection(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),

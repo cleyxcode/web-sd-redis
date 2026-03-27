@@ -1,0 +1,372 @@
+@startuml ERD_WebSekolahWarialau
+!theme plain
+skinparam linetype ortho
+skinparam ranksep 80
+skinparam nodesep 60
+skinparam defaultFontSize 11
+skinparam padding 4
+
+skinparam entity {
+  BackgroundColor #FDFEFE
+  BorderColor #2C3E50
+  HeaderBackgroundColor #2C3E50
+  FontColor #000000
+  HeaderFontColor #FFFFFF
+  FontSize 11
+  BorderThickness 1.5
+}
+
+skinparam arrow {
+  Color #2C3E50
+  Thickness 1.5
+  FontSize 10
+}
+
+title
+  <b><size:16>Entity Relationship Diagram</size></b>
+  <size:12>Sistem Informasi SD Negeri Warialau</size>
+  <size:10>Laravel 12 + Filament v3 | Bredcly F. Tuhuleruw — UKIM 2026</size>
+end title
+
+' ══════════════════════════════════════════
+'   TABEL USERS
+' ══════════════════════════════════════════
+entity "**users**" as users {
+  * id : BIGINT PK AI
+  --
+  * name : VARCHAR(255)
+  * email : VARCHAR(255) UNIQUE
+  o email_verified_at : TIMESTAMP
+  * password : VARCHAR(255)
+  * role : VARCHAR DEFAULT 'orangtua'
+  o no_hp : VARCHAR(255)
+  o remember_token : VARCHAR(100)
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+' ══════════════════════════════════════════
+'   TABEL PASSWORD RESET & SESSIONS
+' ══════════════════════════════════════════
+entity "**password_reset_tokens**" as prt {
+  * email : VARCHAR(255) PK
+  --
+  * token : VARCHAR(255)
+  o created_at : TIMESTAMP
+}
+
+entity "**sessions**" as sessions {
+  * id : VARCHAR(255) PK
+  --
+  o user_id : BIGINT IDX
+  o ip_address : VARCHAR(45)
+  o user_agent : TEXT
+  * payload : LONGTEXT
+  * last_activity : INT IDX
+}
+
+entity "**otp_codes**" as otp_codes {
+  * id : BIGINT PK AI
+  --
+  * email : VARCHAR(255) IDX
+  * otp : VARCHAR(6)
+  * expires_at : TIMESTAMP
+  * used : BOOLEAN DEFAULT false
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+entity "**personal_access_tokens**" as pat {
+  * id : BIGINT PK AI
+  --
+  * tokenable_type : VARCHAR(255)
+  * tokenable_id : BIGINT
+  * name : TEXT
+  * token : VARCHAR(64) UNIQUE
+  o abilities : TEXT
+  o last_used_at : TIMESTAMP
+  o expires_at : TIMESTAMP IDX
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+' ══════════════════════════════════════════
+'   PROFIL & KONFIGURASI
+' ══════════════════════════════════════════
+entity "**profil_sekolah**" as profil {
+  * id : BIGINT PK AI
+  --
+  * nama_sekolah : VARCHAR(255)
+  o kepala_sekolah : VARCHAR(255)
+  o akreditasi : VARCHAR(255)
+  o tahun_berdiri : VARCHAR(255)
+  o jumlah_ruang_kelas : INT
+  o visi : TEXT
+  o misi : TEXT
+  o sejarah : TEXT
+  o alamat : TEXT
+  o kontak : VARCHAR(255)
+  o logo : VARCHAR(255)
+  o koordinat : VARCHAR(255)
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+entity "**settings**" as settings {
+  * id : BIGINT PK AI
+  --
+  * key : VARCHAR(255) UNIQUE
+  o value : TEXT
+  * type : VARCHAR DEFAULT 'text'
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+entity "**aplikasi**" as aplikasi {
+  * id : BIGINT PK AI
+  --
+  * nama_aplikasi : VARCHAR(255)
+  * versi : VARCHAR(255)
+  o deskripsi : TEXT
+  * link_download : VARCHAR(255)
+  o ukuran_file : VARCHAR(255)
+  * status : VARCHAR DEFAULT 'aktif'
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+' ══════════════════════════════════════════
+'   SDM SEKOLAH
+' ══════════════════════════════════════════
+entity "**guru**" as guru {
+  * id : BIGINT PK AI
+  --
+  * nama : VARCHAR(255)
+  o nip : VARCHAR(255)
+  o jabatan : VARCHAR(255)
+  o mata_pelajaran : VARCHAR(255)
+  o no_hp : VARCHAR(255)
+  o foto : VARCHAR(255)
+  * status : VARCHAR DEFAULT 'aktif'
+  o deleted_at : TIMESTAMP
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+entity "**siswa**" as siswa {
+  * id : BIGINT PK AI
+  --
+  * nama : VARCHAR(255)
+  o nis : VARCHAR(255)
+  o kelas : VARCHAR(255)
+  o jenis_kelamin : VARCHAR(255)
+  o tahun_ajaran : VARCHAR(255)
+  o foto : VARCHAR(255)
+  * status : VARCHAR DEFAULT 'aktif'
+  o deleted_at : TIMESTAMP
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+' ══════════════════════════════════════════
+'   KONTEN PUBLIK
+' ══════════════════════════════════════════
+entity "**berita**" as berita {
+  * id : BIGINT PK AI
+  --
+  * user_id : BIGINT FK
+  * judul : VARCHAR(255)
+  * isi : LONGTEXT
+  o gambar : VARCHAR(255)
+  o kategori : VARCHAR(255)
+  o tanggal_publish : DATE
+  * status : VARCHAR DEFAULT 'draft'
+  o deleted_at : TIMESTAMP
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+entity "**galeri**" as galeri {
+  * id : BIGINT PK AI
+  --
+  * user_id : BIGINT FK
+  * judul : VARCHAR(255)
+  * foto : VARCHAR(255)
+  o keterangan : TEXT
+  o deleted_at : TIMESTAMP
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+entity "**banner**" as banner {
+  * id : BIGINT PK AI
+  --
+  * judul : VARCHAR(255)
+  * gambar : VARCHAR(255)
+  * urutan : INT DEFAULT 1
+  * status : VARCHAR DEFAULT 'aktif'
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+' ══════════════════════════════════════════
+'   ALUR PPDB
+' ══════════════════════════════════════════
+entity "**info_pendaftaran**" as info_ppdb {
+  * id : BIGINT PK AI
+  --
+  * user_id : BIGINT FK
+  * tahun_ajaran : VARCHAR(255)
+  * tanggal_buka : DATE
+  * tanggal_tutup : DATE
+  * kuota : INT
+  o syarat : TEXT
+  * status : VARCHAR DEFAULT 'nonaktif'
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+entity "**pendaftaran**" as pendaftaran {
+  * id : BIGINT PK AI
+  --
+  * user_id : BIGINT FK
+  * info_pendaftaran_id : BIGINT FK
+  * nama_anak : VARCHAR(255)
+  o tempat_lahir : VARCHAR(255)
+  * tanggal_lahir : DATE
+  * jenis_kelamin : VARCHAR(255)
+  * agama : VARCHAR(255)
+  o anak_ke : INT
+  o asal_sekolah : VARCHAR(255)
+  o nik : VARCHAR(255)
+  o no_kk : VARCHAR(255)
+  * alamat : TEXT
+  o nama_ayah : VARCHAR(255)
+  o pekerjaan_ayah : VARCHAR(255)
+  o nama_ibu : VARCHAR(255)
+  o pekerjaan_ibu : VARCHAR(255)
+  o nama_wali : VARCHAR(255)
+  * no_hp : VARCHAR(255)
+  o dokumen : VARCHAR(255)
+  * status : VARCHAR DEFAULT 'pending'
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+' ══════════════════════════════════════════
+'   NOTIFIKASI
+' ══════════════════════════════════════════
+entity "**notifikasi**" as notifikasi {
+  * id : BIGINT PK AI
+  --
+  * user_id : BIGINT FK
+  * judul : VARCHAR(255)
+  * pesan : TEXT
+  * tipe : VARCHAR(255)
+  o referensi_id : BIGINT
+  * dibaca : BOOLEAN DEFAULT false
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+' ══════════════════════════════════════════
+'   MEDIA (Spatie Media Library)
+' ══════════════════════════════════════════
+entity "**media**" as media {
+  * id : BIGINT PK AI
+  --
+  * model_type : VARCHAR(255)
+  * model_id : BIGINT
+  o uuid : UUID UNIQUE
+  * collection_name : VARCHAR(255)
+  * name : VARCHAR(255)
+  * file_name : VARCHAR(255)
+  o mime_type : VARCHAR(255)
+  * disk : VARCHAR(255)
+  o conversions_disk : VARCHAR(255)
+  * size : BIGINT
+  * manipulations : JSON
+  * custom_properties : JSON
+  * generated_conversions : JSON
+  * responsive_images : JSON
+  o order_column : INT IDX
+  o created_at : TIMESTAMP
+  o updated_at : TIMESTAMP
+}
+
+' ══════════════════════════════════════════
+'   SISTEM
+' ══════════════════════════════════════════
+entity "**cache**" as cache {
+  * key : VARCHAR(255) PK
+  --
+  * value : MEDIUMTEXT
+  * expiration : INT
+}
+
+entity "**jobs**" as jobs {
+  * id : BIGINT PK AI
+  --
+  * queue : VARCHAR(255) IDX
+  * payload : LONGTEXT
+  * attempts : TINYINT
+  o reserved_at : INT IDX
+  * available_at : INT IDX
+  * created_at : INT
+}
+
+' ══════════════════════════════════════════
+'   RELASI — FOREIGN KEY (CASCADE)
+' ══════════════════════════════════════════
+
+users ||--o{ berita          : "user_id\n1 user → N berita"
+users ||--o{ galeri          : "user_id\n1 user → N galeri"
+users ||--o{ info_ppdb       : "user_id\n1 user → N info ppdb"
+users ||--o{ pendaftaran     : "user_id\n1 user → N pendaftaran"
+users ||--o{ notifikasi      : "user_id\n1 user → N notifikasi"
+
+info_ppdb ||--o{ pendaftaran : "info_pendaftaran_id\n1 periode → N pendaftar"
+
+' ══════════════════════════════════════════
+'   RELASI — POLYMORPHIC (Spatie Media)
+' ══════════════════════════════════════════
+
+guru        }o..o{ media : "morph\nfoto & dokumen"
+siswa       }o..o{ media : "morph\nfoto & dokumen"
+galeri      }o..o{ media : "morph\nfoto album"
+pendaftaran }o..o{ media : "morph\nberkas upload"
+
+' ══════════════════════════════════════════
+'   RELASI — POLYMORPHIC (Sanctum)
+' ══════════════════════════════════════════
+
+users ||..o{ pat : "morph\nAPI token (Sanctum)"
+
+' ══════════════════════════════════════════
+'   RELASI — SOFT REFERENCE
+' ══════════════════════════════════════════
+
+notifikasi ..> berita      : "referensi_id\n(tipe='berita')"
+notifikasi ..> pendaftaran : "referensi_id\n(tipe='pendaftaran')"
+
+' ══════════════════════════════════════════
+'   LEGEND
+' ══════════════════════════════════════════
+legend bottom
+  <b>Notasi Kolom</b>
+  *  = NOT NULL (wajib diisi)
+  o  = NULLABLE (boleh kosong)
+  PK = Primary Key | FK = Foreign Key
+  AI = Auto Increment | IDX = Index
+  --
+  <b>Jenis Relasi</b>
+  ||--o{ = One-to-Many  (FK resmi CASCADE)
+  }o..o{ = Polymorphic  (Spatie morph)
+  ||..o{ = Polymorphic  (Sanctum morph)
+  ..>     = Soft Reference (no FK formal)
+  --
+  <b>Soft Delete</b>: guru · siswa · berita · galeri
+  (kolom deleted_at — data tidak dihapus fisik)
+endlegend
+
+@enduml

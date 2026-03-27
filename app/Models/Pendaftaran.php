@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Pendaftaran extends Model
+class Pendaftaran extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $table = 'pendaftaran';
 
     protected $fillable = [
@@ -30,6 +34,12 @@ class Pendaftaran extends Model
         'dokumen',
         'status',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('dokumen')
+            ->singleFile();
+    }
 
     public function user()
     {

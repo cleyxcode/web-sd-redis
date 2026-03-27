@@ -13,6 +13,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Jacobtims\InlineDateTimePicker\Forms\Components\InlineDateTimePicker;
 
 class BeritaResource extends Resource
 {
@@ -45,7 +46,10 @@ class BeritaResource extends Resource
                             ->disk('public')
                             ->directory('berita'),
                         Forms\Components\TextInput::make('kategori'),
-                        Forms\Components\DatePicker::make('tanggal_publish'),
+                        InlineDateTimePicker::make('tanggal_publish')
+                            ->label('Tanggal Publish')
+                            ->date(true)
+                            ->time(false),
                         Forms\Components\Select::make('status')
                             ->options([
                                 'draft' => 'Draft',
@@ -75,6 +79,7 @@ class BeritaResource extends Resource
                     ->date()
                     ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('status')
                     ->options([

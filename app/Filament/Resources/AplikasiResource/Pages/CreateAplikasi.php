@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateAplikasi extends CreateRecord
 {
     protected static string $resource = AplikasiResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\StatusAktif;
 use App\Filament\Resources\InfoPendaftaranResource\Pages;
 use App\Models\InfoPendaftaran;
 use Filament\Forms;
@@ -10,6 +11,8 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Guava\FilamentIconSelectColumn\Tables\Columns\IconSelectColumn;
+use Jacobtims\InlineDateTimePicker\Forms\Components\InlineDateTimePicker;
 
 class InfoPendaftaranResource extends Resource
 {
@@ -27,9 +30,15 @@ class InfoPendaftaranResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('tahun_ajaran')
                     ->required(),
-                Forms\Components\DatePicker::make('tanggal_buka')
+                InlineDateTimePicker::make('tanggal_buka')
+                    ->label('Tanggal Buka')
+                    ->date(true)
+                    ->time(false)
                     ->required(),
-                Forms\Components\DatePicker::make('tanggal_tutup')
+                InlineDateTimePicker::make('tanggal_tutup')
+                    ->label('Tanggal Tutup')
+                    ->date(true)
+                    ->time(false)
                     ->required(),
                 Forms\Components\TextInput::make('kuota')
                     ->numeric()
@@ -62,12 +71,11 @@ class InfoPendaftaranResource extends Resource
                 Tables\Columns\TextColumn::make('kuota')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'success' => 'aktif',
-                        'danger' => 'nonaktif',
-                    ]),
+                IconSelectColumn::make('status')
+                    ->options(StatusAktif::class)
+                    ->closeOnSelection(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),

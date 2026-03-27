@@ -2,9 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use AhmedAbdelrhman\FilamentMediaGallery\Infolists\Components\MediaGalleryEntry;
+use App\Enums\StatusPendaftaran;
 use App\Filament\Resources\PendaftaranResource\Pages;
 use App\Models\Pendaftaran;
+use Guava\FilamentIconSelectColumn\Tables\Columns\IconSelectColumn;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
@@ -12,6 +16,10 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class PendaftaranResource extends Resource
 {
@@ -36,6 +44,14 @@ class PendaftaranResource extends Resource
                                 'ditolak' => 'Ditolak',
                             ])
                             ->required(),
+                    ]),
+
+                Forms\Components\Section::make('Dokumen')
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('dokumen')
+                            ->collection('dokumen')
+                            ->acceptedFileTypes(['application/pdf', 'image/*'])
+                            ->label('Upload Dokumen (PDF / Gambar)'),
                     ]),
             ]);
     }
@@ -74,16 +90,20 @@ class PendaftaranResource extends Resource
 
                 Infolists\Components\Section::make('Dokumen')
                     ->schema([
-                        Infolists\Components\TextEntry::make('dokumen'),
+                        MediaGalleryEntry::make('dokumen')
+                            ->collection('dokumen')
+                            ->size(200)
+                            ->label(''),
                     ]),
 
                 Infolists\Components\Section::make('Status Pendaftaran')
                     ->schema([
-                        Infolists\Components\BadgeEntry::make('status')
-                            ->colors([
-                                'warning' => 'pending',
-                                'success' => 'diterima',
-                                'danger' => 'ditolak',
+                        Infolists\Components\TextEntry::make('status')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'diterima' => 'success',
+                                'ditolak'  => 'danger',
+                                default    => 'warning',
                             ]),
                     ]),
             ]);
@@ -101,16 +121,14 @@ class PendaftaranResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('asal_sekolah')
                     ->searchable(),
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'warning' => 'pending',
-                        'success' => 'diterima',
-                        'danger' => 'ditolak',
-                    ]),
+                IconSelectColumn::make('status')
+                    ->options(StatusPendaftaran::class)
+                    ->closeOnSelection(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('status')
                     ->options([
@@ -119,11 +137,56 @@ class PendaftaranResource extends Resource
                         'ditolak' => 'Ditolak',
                     ]),
             ])
+            ->headerActions([
+                ExportAction::make()->exports([
+                    ExcelExport::make()
+                        ->withFilename(date('Y-m-d') . '_data-pendaftaran')
+                        ->withColumns([
+                            Column::make('nama_anak')->heading('Nama Anak'),
+                            Column::make('tempat_lahir')->heading('Tempat Lahir'),
+                            Column::make('tanggal_lahir')->heading('Tanggal Lahir'),
+                            Column::make('jenis_kelamin')->heading('Jenis Kelamin'),
+                            Column::make('agama')->heading('Agama'),
+                            Column::make('anak_ke')->heading('Anak Ke'),
+                            Column::make('asal_sekolah')->heading('Asal Sekolah'),
+                            Column::make('nik')->heading('NIK'),
+                            Column::make('no_kk')->heading('No. KK'),
+                            Column::make('alamat')->heading('Alamat'),
+                            Column::make('nama_ayah')->heading('Nama Ayah'),
+                            Column::make('pekerjaan_ayah')->heading('Pekerjaan Ayah'),
+                            Column::make('nama_ibu')->heading('Nama Ibu'),
+                            Column::make('pekerjaan_ibu')->heading('Pekerjaan Ibu'),
+                            Column::make('nama_wali')->heading('Nama Wali'),
+                            Column::make('no_hp')->heading('No. HP'),
+                            Column::make('status')->heading('Status'),
+                            Column::make('created_at')->heading('Tanggal Daftar'),
+                        ]),
+                ]),
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([]);
+            ->bulkActions([
+                ExportBulkAction::make()->exports([
+                    ExcelExport::make()
+                        ->withFilename(date('Y-m-d') . '_data-pendaftaran-terpilih')
+                        ->withColumns([
+                            Column::make('nama_anak')->heading('Nama Anak'),
+                            Column::make('tempat_lahir')->heading('Tempat Lahir'),
+                            Column::make('tanggal_lahir')->heading('Tanggal Lahir'),
+                            Column::make('jenis_kelamin')->heading('Jenis Kelamin'),
+                            Column::make('agama')->heading('Agama'),
+                            Column::make('asal_sekolah')->heading('Asal Sekolah'),
+                            Column::make('alamat')->heading('Alamat'),
+                            Column::make('nama_ayah')->heading('Nama Ayah'),
+                            Column::make('nama_ibu')->heading('Nama Ibu'),
+                            Column::make('no_hp')->heading('No. HP'),
+                            Column::make('status')->heading('Status'),
+                            Column::make('created_at')->heading('Tanggal Daftar'),
+                        ]),
+                ]),
+            ]);
     }
 
     public static function getRelations(): array

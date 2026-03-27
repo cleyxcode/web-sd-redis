@@ -4,14 +4,16 @@ namespace App\Filament\Resources\GuruResource\Pages;
 
 use App\Filament\Resources\GuruResource;
 use Filament\Actions;
-use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class CreateGuru extends CreateRecord
+class ViewGuru extends ViewRecord
 {
     protected static string $resource = GuruResource::class;
 
-    protected function getRedirectUrl(): string
+    protected function getHeaderActions(): array
     {
-        return $this->getResource()::getUrl('index');
+        return [
+            Actions\EditAction::make(),
+        ];
     }
 }

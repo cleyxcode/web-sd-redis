@@ -9,6 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Traineratwot\FilamentOpenStreetMap\Forms\Components\MapInput;
+use Traineratwot\FilamentOpenStreetMap\Enums\PointFormat;
 
 class ProfilSekolahResource extends Resource
 {
@@ -49,6 +51,16 @@ class ProfilSekolahResource extends Resource
                         Forms\Components\Textarea::make('alamat')->rows(3),
                         Forms\Components\TextInput::make('kontak'),
                     ])->columns(2),
+
+                Forms\Components\Section::make('Lokasi Sekolah di Peta')
+                    ->description('Klik pada peta untuk menentukan lokasi sekolah, atau cari menggunakan kolom pencarian.')
+                    ->schema([
+                        MapInput::make('koordinat')
+                            ->label('Titik Koordinat')
+                            ->saveFormat(PointFormat::LAT_LNG)
+                            ->columnSpanFull()
+                            ->default('-3.5938, 128.9153'), // default: Maluku
+                    ]),
 
                 Forms\Components\Section::make('Logo')
                     ->schema([

@@ -20,5 +20,6 @@ class ProfilSekolah extends Model
         'alamat',
         'kontak',
         'logo',
+        'koordinat',
     ];
 }

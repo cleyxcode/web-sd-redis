@@ -4,14 +4,16 @@ namespace App\Filament\Resources\SiswaResource\Pages;
 
 use App\Filament\Resources\SiswaResource;
 use Filament\Actions;
-use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class CreateSiswa extends CreateRecord
+class ViewSiswa extends ViewRecord
 {
     protected static string $resource = SiswaResource::class;
 
-    protected function getRedirectUrl(): string
+    protected function getHeaderActions(): array
     {
-        return $this->getResource()::getUrl('index');
+        return [
+            Actions\EditAction::make(),
+        ];
     }
 }
