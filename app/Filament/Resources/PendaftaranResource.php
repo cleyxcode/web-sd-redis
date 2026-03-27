@@ -104,7 +104,7 @@ class PendaftaranResource extends Resource
                                 'diterima' => 'success',
                                 'ditolak'  => 'danger',
                                 default    => 'warning',
-                            ]),
+                            }),
                     ]),
             ]);
     }
